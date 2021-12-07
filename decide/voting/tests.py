@@ -15,7 +15,54 @@ from mixnet.mixcrypt import MixCrypt
 from mixnet.models import Auth
 from voting.models import Voting, Question, QuestionOption
 
+#Test de guardado de una votación binaria y comprobar que lo ha hecho correctamente
+class GuardaVotacionBinariaTest(BaseTestCase):
+    def setUp(self):
+        vb = VotacionBinaria(titulo="Titulo 1",descripcion="Descripcion")
+        vb.save()
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vb=None
+    def testExist(self):
+        vb = VotacionBinaria.objects.get(titulo="Titulo 1")
+        self.assertEquals(vb.titulo,"Titulo 1")
+        self.assertEquals(vb.descripcion,"Descripcion")
 
+#Crea una votación nueva, posteriormente la actualiza y comprueba que la actualización ha sido realizada con éxito
+class ActualizaVotacionBinariaTest(BaseTestCase):
+    def setUp(self):
+        vb = VotacionBinaria(titulo="Titulo 1",descripcion="Descripcion")
+        vb.save()
+        vb.titulo = "Titulo 2"
+        vb.descripcion = "Description"
+        vb.save()
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vb=None
+    def testActualizado(self):
+        vb = VotacionBinaria.objects.get(titulo="Titulo 2")
+        self.assertEquals(vb.titulo,"Titulo 2")
+        self.assertEquals(vb.descripcion,"Description")
+
+#Crea una votación binaria, después crea una segunda, posteriormente la elimina y comprueba que se ha eliminado correctamente la segunda votación
+class BorraVotacionBinariaTest(BaseTestCase):
+    def setUp(self):
+        vb1 = VotacionBinaria(titulo="Titulo 1",descripcion="Descripcion 1")
+        vb1.save()
+        vb2 = VotacionBinaria(titulo="Titulo 2",descripcion="Descripcion 2")
+        vb2.save()
+        vb2.delete()
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vb1=None
+        self.vb2=None
+    def testBorrado(self):
+        totalVotaciones = len(VotacionBinaria.objects.all())
+        self.assertEquals(totalVotaciones,1)
+        
 class VotingTestCase(BaseTestCase):
 
     def setUp(self):
