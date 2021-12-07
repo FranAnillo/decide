@@ -12,6 +12,8 @@ from base.tests import BaseTestCase
 from census.models import Census
 from mixnet.mixcrypt import ElGamal
 from mixnet.mixcrypt import MixCrypt
+
+from mixnet.models import Auth
 from voting.models import *
 
 #Test de guardado de una votación binaria y comprobar que lo ha hecho correctamente
@@ -61,6 +63,7 @@ class BorraVotacionBinariaTest(BaseTestCase):
     def testBorrado(self):
         totalVotaciones = len(VotacionBinaria.objects.all())
         self.assertEquals(totalVotaciones,1)
+
 
 class VotingTestCase(BaseTestCase):
 
