@@ -64,6 +64,51 @@ class BorraVotacionBinariaTest(BaseTestCase):
         totalVotaciones = len(VotacionBinaria.objects.all())
         self.assertEquals(totalVotaciones,1)
 
+#Creación de una respuesta binaria a partir de una votación binaria
+class AddRespuestaBinaria(BaseTestCase):
+    def setUp(self):
+        vb1 = VotacionBinaria(titulo="Titulo 1",descripcion="Descripcion 1")
+        vb1.save()
+        rb1  = RespuestaBinaria(respuesta = 1)
+        vb1.addRespuestaBinaria(rb1)
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vb1=None
+        self.rb1=None
+    def testAdd(self):
+        vb = VotacionBinaria.objects.get(titulo="Titulo 1")
+        rb = RespuestaBinaria.objects.get(votacionBinaria_id=vb.id)
+        self.assertEquals(rb.respuesta,1)
+        self.assertEquals(rb.votacionBinaria_id,vb.id)
+
+#Creación de una votación binaria con 4 respuestas para el conteo de true y false
+class CuentaTruesYFalsesTest(BaseTestCase):
+    def setUp(self):
+        vb1 = VotacionBinaria(titulo="Titulo 1",descripcion="Descripcion 1")
+        vb1.save()
+
+        rb1 = RespuestaBinaria(respuesta=1)
+        rb2 = RespuestaBinaria(respuesta=1)
+        rb3 = RespuestaBinaria(respuesta=1)
+        rb4 = RespuestaBinaria(respuesta=0)
+
+        vb1.addRespuestaBinaria(rb1)
+        vb1.addRespuestaBinaria(rb2)
+        vb1.addRespuestaBinaria(rb3)
+        vb1.addRespuestaBinaria(rb4)
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vb1=None
+        self.rb1=None
+        self.rb2=None
+        self.rb3=None
+        self.rb4=None
+    def testContador(self):
+        vb = VotacionBinaria.objects.get(titulo="Titulo 1")
+        self.assertEquals(vb.Numero_De_Trues(),3)
+        self.assertEquals(vb.Numero_De_Falses(),1)
 
 class VotingTestCase(BaseTestCase):
 
