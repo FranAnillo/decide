@@ -16,6 +16,21 @@ class VotacionBinaria(models.Model):
 
     def str(self):
         return self.titulo
+        
+    #Contea el número de Si (true) emitido en la votación binaria
+    def Numero_De_Trues(self):
+        return RespuestaBinaria.objects.filter(respuesta=1,votacionBinaria_id=self.id).count()
+
+    #Contea el número de No (false) emitido en la votación binaria
+    def Numero_De_Falses(self):
+        return RespuestaBinaria.objects.filter(respuesta=0,votacionBinaria_id=self.id).count()
+
+    #Añade una respuesta binaria a la votación del mismo tipo 
+    #Cuando creemos la respuesta binaria solo le tendremos que indicar los atributos de la respuesta en sí (el sentir del voto)
+    #La función entonces asociará la respuesta binaria emitida a la pregunta binaria en cuestión  
+    def addRespuestaBinaria(self,respuestaBinaria):
+        respuestaBinaria.votacionBinaria = self
+        respuestaBinaria.save()
 
 
 #Modelo respuesta binaria
