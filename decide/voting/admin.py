@@ -1,12 +1,23 @@
 from django.contrib import admin
 from django.utils import timezone
 
-from .models import QuestionOption
-from .models import Question
-from .models import Voting
+from .models import *
 
 from .filters import StartedFilter
 
+#Votaciones Binarias
+class RespuestaBinariaInline(admin.TabularInline):
+    model = RespuestaBinaria
+    extra = 1
+
+#Creadión de la visualización de votaciones binarias para un admin
+class VotacionBinariaAdmin(admin.ModelAdmin):
+    list_display=('id','titulo','descripcion','Numero_Trues','Numero_Falses')
+    inlines =[RespuestaBinariaInline] 
+
+#Creadión de la respuesta de votaciones binarias para un admin
+class RepuestaBinariaAdmin(admin.ModelAdmin):
+    list_display = ('id','respuesta','Nombre_Votacion')
 
 def start(modeladmin, request, queryset):
     for v in queryset.all():
@@ -48,3 +59,5 @@ class VotingAdmin(admin.ModelAdmin):
 
 admin.site.register(Voting, VotingAdmin)
 admin.site.register(Question, QuestionAdmin)
+admin.site.register(VotacionBinaria,VotacionBinariaAdmin)
+admin.site.register(RespuestaBinaria,RepuestaBinariaAdmin)
