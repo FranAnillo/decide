@@ -43,6 +43,44 @@ class RespuestaBinaria(models.Model):
         return self.votacionBinaria.titulo
 
 
+#Votaciones Preferencia
+class VotacionPreferencia(models.Model):
+    id = models.AutoField(primary_key=True)
+    titulo = models.CharField(max_length=60)
+    descripcion = models.TextField()
+    def __str__(self):
+        return self.titulo
+
+
+class PreguntaPreferencia(models.Model):
+    id = models.AutoField(primary_key=True)
+    votacionPreferencia = models.ForeignKey(VotacionPreferencia,on_delete = models.CASCADE)
+    textoPregunta = models.CharField(max_length=50)
+    def Nombre_Votacion_Preferencia(self):
+        return self.votacionPreferencia.titulo
+    def __str__(self):
+        return self.textoPregunta
+
+
+class OpcionRespuesta(models.Model):
+    id = models.AutoField(primary_key=True)
+    preguntaPreferencia = models.ForeignKey(PreguntaPreferencia,on_delete = models.CASCADE)
+    nombre_opcion = models.CharField(max_length=100)
+    def Nombre_Pregunta_Preferencia(self):
+        return self.preguntaPreferencia.textoPregunta
+    def __str__(self):
+        return self.nombre_opcion
+
+
+class RespuestaPreferencia(models.Model):
+    id = models.AutoField(primary_key=True)
+    opcionRespuesta = models.ForeignKey(OpcionRespuesta,on_delete = models.CASCADE)
+    orden_preferencia = models.PositiveIntegerField(blank=True, null=True)
+    def Nombre_Opcion_Respuesta(self):
+        return self.opcionRespuesta.nombre_opcion
+
+
+#Votación
 class Question(models.Model):
     desc = models.TextField()
 
