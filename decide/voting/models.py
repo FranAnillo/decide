@@ -50,6 +50,19 @@ class VotacionPreferencia(models.Model):
     descripcion = models.TextField()
     def __str__(self):
         return self.titulo
+    
+    
+    #Devuelve el número de preguntas que tiene asociada una votación preferencia
+    def Numero_De_Preguntas_Preferencia(self):
+        return PreguntaPreferencia.objects.filter(votacionPreferencia_id=self.id).count()
+
+    
+    #Añade una pregunta preferencia a la votación preferencia
+    #Al crear la pregunta preferencia solo es necesario indicar el atributo textopregunta
+    #La función asocia directamente la pregunta preferencia a la votación preferencia que se le ha indicado
+    def addPreguntaPreferencia(self, preguntaPreferencia):
+        preguntaPreferencia.votacionPreferencia = self
+        preguntaPreferencia.save()
 
 
 class PreguntaPreferencia(models.Model):
@@ -61,6 +74,17 @@ class PreguntaPreferencia(models.Model):
     def __str__(self):
         return self.textoPregunta
 
+    #Devuelve el número de opciones existentes en la pregunta
+    def Numero_De_Opciones(self):
+        return OpcionRespuesta.objects.filter(preguntaPreferencia_id=self.id).count()
+
+    #Añade una respuesta a la pregunta preferencia
+    #Al crear la respuesta solo es necesario el atributo nombre_opcion
+    #La función asocia directamente la respuesta con la pregunta preferencia indicada
+    def addOpcionRespuesta(self, opcionRespuesta):
+        opcionRespuesta.preguntaPreferencia = self
+        opcionRespuesta.save()
+
 
 class OpcionRespuesta(models.Model):
     id = models.AutoField(primary_key=True)
@@ -70,6 +94,45 @@ class OpcionRespuesta(models.Model):
         return self.preguntaPreferencia.textoPregunta
     def __str__(self):
         return self.nombre_opcion
+    
+    #Añade una respuesta preferencia a la respuesta
+    #Al crear la respuesta preferencia solo es necesario el atributo orden_preferencia
+    #La función asocia directamente la respuesta preferencia con la respuesta indicada
+    def addRespuetaPreferencia(self, respuestaPreferencia):
+        respuestaPreferencia.opcionRespuesta = self
+        respuestaPreferencia.save()
+
+
+    #Devuelve la media de preferencia de la opción en función de las respuestas dadas a esa opción
+    def Media_Preferencia(self):
+        respuestas = RespuestaPreferencia.objects.filter(opcionRespuesta=self.id).values('orden_preferencia')
+        n_respuestas = len(respuestas)
+        if n_respuestas == 0:  ##Evita la división por cero
+            n_respuestas = 1
+        total = 0
+        for value in respuestas:
+            total = total + value['orden_preferencia']
+        return total / n_respuestas
+
+    
+    #Para cada opción devuelve un diccionario con el siguiente formato:
+    #(POS1: X veces), (POS2: Y veces), ... ,(POSN: Z veces)
+    #Donde POS es la posición de preferencia donde se ha colocado dicha opción y 'X', 'Y' y 'Z' son el nº de veces que se ha indicado en esa posición
+    def Respuestas_Opcion(self):
+        respuestas = RespuestaPreferencia.objects.filter(opcionRespuesta=self.id).values('orden_preferencia')
+        result = {}
+
+        for value in respuestas:
+            if value['orden_preferencia'] in result:
+                result[value['orden_preferencia']] = result[value['orden_preferencia']] + 1
+            else:
+                result[value['orden_preferencia']] = 1
+
+        for key in result:
+            result[key] = str(result[key]) + " veces"
+
+        print(result)
+        return sorted(result.items())
 
 
 class RespuestaPreferencia(models.Model):
