@@ -5,7 +5,7 @@ Plataforma voto electrónico educativa
 
 El objetivo de este proyecto es implementar una plataforma de voto
 electrónico seguro, que cumpla una serie de garantías básicas, como la
-anonimicidad y el secreto del voto.
+anonimicidad y el secreto de las votaciones.
 
 Se trata de un proyecto educativo, pensado para el estudio de sistemas de
 votación, por lo que prima la simplicidad por encima de la eficiencia
