@@ -18,11 +18,11 @@ class VotacionBinaria(models.Model):
         return self.titulo
         
     #Contea el número de Si (true) emitido en la votación binaria
-    def Numero_De_Trues(self):
+    def Numero_Trues(self):
         return RespuestaBinaria.objects.filter(respuesta=1,votacionBinaria_id=self.id).count()
 
     #Contea el número de No (false) emitido en la votación binaria
-    def Numero_De_Falses(self):
+    def Numero_Falses(self):
         return RespuestaBinaria.objects.filter(respuesta=0,votacionBinaria_id=self.id).count()
 
     #Añade una respuesta binaria a la votación del mismo tipo 
