@@ -42,11 +42,11 @@ jobs:
           coverage-reports: decide/coverage.xml
   deploy:
     runs-on: ubuntu-latest
-    if: ${{github.ref == 'refs/heads/master' }}
+    if: ${{github.ref == 'refs/heads/Equipo-1' }}
       steps:
       - uses: actions/checkout@v1
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
-            heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-            heroku_app_name: " <<your app name>>"
-            heroku_email: " <<your email>>"
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "decide-1040-2021d"
+          heroku_email: "dani.dorante2000@gmail.com"
