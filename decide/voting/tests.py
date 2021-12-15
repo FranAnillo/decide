@@ -107,8 +107,8 @@ class CuentaTruesYFalsesTest(BaseTestCase):
         self.rb4=None
     def testContador(self):
         vb = VotacionBinaria.objects.get(titulo="Titulo 1")
-        self.assertEquals(vb.Numero_De_Trues(),3)
-        self.assertEquals(vb.Numero_De_Falses(),1)
+        self.assertEquals(vb.Numero_Trues(),3)
+        self.assertEquals(vb.Numero_Falses(),1)
 
 
 #Test votaciones preferencia
