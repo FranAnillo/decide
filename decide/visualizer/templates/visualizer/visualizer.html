@@ -41,7 +41,10 @@
                     </tbody>
                 </table>
             </div>
-
+            <div class="row">
+                <p v-if="voting.end_date" id="qr-result" style="text-align:center; text-">Puedes compartir los resultados de está votación mediante las siguintes opciones:</p>
+                <canvas v-if="voting.end_date" id="qr-code" style="padding-left: 75%"></canvas>
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -51,7 +54,8 @@
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
     <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    
     <script>
         var voting = {{voting|safe}};
         var app = new Vue({
@@ -62,5 +66,16 @@
             }
         })
     </script>
+
+<script>
+    var qr;
+    (function() {
+            qr = new QRious({
+            element: document.getElementById('qr-code'),
+            size: 100,
+            value: window.location.href
+        });
+    })();
+</script>
 </body>
 {% endblock %}
