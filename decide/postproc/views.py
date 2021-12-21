@@ -61,7 +61,7 @@ class PostProcView(APIView):
 
     def post(self, request):
         """
-         * type: IDENTITY | EQUALITY | WEIGHT | DHONT
+         * type: IDENTITY | DHONT | RELATIVA | ABSOLUTA | BORDA | SUBTRAC
          * options: [
             {
              option: str,
@@ -70,6 +70,7 @@ class PostProcView(APIView):
              ...extraparams
             }
            ]
+	    * seats: int
         """
 
         t = request.data.get('type')
@@ -78,8 +79,25 @@ class PostProcView(APIView):
         s = request.data.get('seats')
         p = request.data.get('paridad')
 
+        if len(opts) == 0 and len(order_opts) == 0:
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
         if t == 'IDENTITY':
             return self.identity(opts)
+        elif t == 'RELATIVA':
+            return self.relativa(opts)
+        elif t == 'ABSOLUTA':
+            return self.absoluta(opts)
+        elif t == 'BORDA':
+            if len(order_opts) == 0:
+                return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return self.borda(order_opts)
+        elif t == 'SUBTRAC':
+            if (s == None):
+                return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(self.subtrac(opts, s))
         elif t == 'DHONT':
             if(s==None):
                 return Response({}, status=status.HTTP_400_BAD_REQUEST)
@@ -89,5 +107,22 @@ class PostProcView(APIView):
                    return Response(self.aplicarParidad(results))
                 else:    
                     return Response(self.dhont(opts, s))
-
+        elif t == 'WEBSTER':
+            if(s==None):
+                return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(self.webster(opts, s))
+        elif t=='WEBSTERMOD':
+            if(s==None):
+                return Response([], status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(self.webster_mod(opts, s))
+        elif t == 'HAMILTON':
+            if(s==None):
+                return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(self.hamilton(opts, s))            
+        else:
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
         return Response({})
+        

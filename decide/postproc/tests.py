@@ -43,6 +43,7 @@ class PostProcTestCase(APITestCase):
         values = response.json()
         self.assertEqual(values, expected_result)
 
+#Tests Ley D'Hont
     def test_dhont_1(self):
         seats = 9
         data = {
@@ -155,6 +156,130 @@ class PostProcTestCase(APITestCase):
 
         response = self.client.post('/postproc/', data, format='json')
         self.assertEqual(response.status_code, 200)
+
+        values = response.json()
+        self.assertEqual(values, expected_result)
+
+#Tests de SUSTRACCION
+    def test_substrat_1(self):
+        seats = 8
+        data = {
+            'seats': seats,
+            'type': 'SUBTRAC',
+            'options': [
+                {'option': 'Option 1', 'number': 1, 'votes_add': 10, 'votes_subtract':12},
+                {'option': 'Option 2', 'number': 2, 'votes_add': 5, 'votes_subtract':2},
+                {'option': 'Option 3', 'number': 3, 'votes_add': 6, 'votes_subtract':1},
+                {'option': 'Option 4', 'number': 4, 'votes_add': 8, 'votes_subtract':2},
+                {'option': 'Option 5', 'number': 5, 'votes_add': 2, 'votes_subtract':0},
+
+            ]
+        }
+
+        expected_result = [
+            {'option': 'Option 4', 'number': 4, 'votes_add': 8, 'votes_subtract':2, 'votes': 6, 'postproc': 3},
+            {'option': 'Option 3', 'number': 3, 'votes_add': 6, 'votes_subtract':1, 'votes': 5, 'postproc': 3},
+            {'option': 'Option 2', 'number': 2, 'votes_add': 5, 'votes_subtract':2, 'votes': 3, 'postproc': 1},
+            {'option': 'Option 5', 'number': 5, 'votes_add': 2, 'votes_subtract':0, 'votes': 2, 'postproc': 1},
+            {'option': 'Option 1', 'number': 1, 'votes_add': 10, 'votes_subtract':12, 'votes': 0, 'postproc': 0},
+        ]
+
+        response = self.client.post('/postproc/', data, format='json')
+        self.assertEqual(response.status_code, 200)
+
+        values = response.json()
+        self.assertEqual(values, expected_result)
+
+
+    def test_substrat_2(self):
+        seats = 300
+        data = {
+            'seats': seats,
+            'type': 'SUBTRAC',
+            'options': [
+                {'option': 'Option 1', 'number': 1, 'votes_add': 10032, 'votes_subtract':2345},
+                {'option': 'Option 2', 'number': 2, 'votes_add': 423, 'votes_subtract':22},
+                {'option': 'Option 3', 'number': 3, 'votes_add': 8002, 'votes_subtract':4231},
+                {'option': 'Option 4', 'number': 4, 'votes_add': 1235, 'votes_subtract':1932},
+                {'option': 'Option 5', 'number': 5, 'votes_add': 9012, 'votes_subtract':230},
+                {'option': 'Option 6', 'number': 6, 'votes_add': 7000, 'votes_subtract': 4000},
+
+            ]
+        }
+
+        expected_result = [
+            {'option': 'Option 5', 'number': 5, 'votes_add': 9012, 'votes_subtract': 230, 'votes': 8782, 'postproc': 111},
+            {'option': 'Option 1', 'number': 1, 'votes_add': 10032, 'votes_subtract': 2345, 'votes': 7687,'postproc': 98},
+            {'option': 'Option 3', 'number': 3, 'votes_add': 8002, 'votes_subtract': 4231, 'votes': 3771,'postproc':48},
+            {'option': 'Option 6', 'number': 6, 'votes_add': 7000, 'votes_subtract': 4000, 'votes': 3000,'postproc': 38},
+            {'option': 'Option 2', 'number': 2, 'votes_add': 423, 'votes_subtract': 22, 'votes': 401, 'postproc': 5},
+            {'option': 'Option 4', 'number': 4, 'votes_add': 1235, 'votes_subtract':1932, 'votes': 0, 'postproc': 0},
+        ]
+
+        response = self.client.post('/postproc/', data, format='json')
+        self.assertEqual(response.status_code, 200)
+
+        values = response.json()
+        self.assertEqual(values, expected_result)
+
+
+    def test_substrat_no_options(self):
+        seats = 300
+        data = {
+            'seats': seats,
+            'type': 'SUBTRAC',
+
+        }
+
+        expected_result = {}
+
+        response = self.client.post('/postproc/', data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+        values = response.json()
+        self.assertEqual(values, expected_result)
+
+
+    def test_substrat_no_type(self):
+        seats = 300
+        data = {
+            'seats': seats,
+            'options': [
+                {'option': 'Option 1', 'number': 1, 'votes_add': 10032, 'votes_subtract':2345},
+                {'option': 'Option 2', 'number': 2, 'votes_add': 423, 'votes_subtract':22},
+                {'option': 'Option 3', 'number': 3, 'votes_add': 8002, 'votes_subtract':4231},
+                {'option': 'Option 4', 'number': 4, 'votes_add': 1235, 'votes_subtract':1932},
+                {'option': 'Option 5', 'number': 5, 'votes_add': 9012, 'votes_subtract':230},
+                {'option': 'Option 6', 'number': 6, 'votes_add': 7000, 'votes_subtract': 4000},
+
+            ]
+        }
+
+        expected_result = {}
+
+        response = self.client.post('/postproc/', data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+        values = response.json()
+        self.assertEqual(values, expected_result)
+
+    def test_substrat_no_seats(self):
+        data = {
+            'type': 'SUBTRAC',
+            'options': [
+                {'option': 'Option 1', 'number': 1, 'votes_add': 10, 'votes_subtract':12},
+                {'option': 'Option 2', 'number': 2, 'votes_add': 5, 'votes_subtract':2},
+                {'option': 'Option 3', 'number': 3, 'votes_add': 6, 'votes_subtract':1},
+                {'option': 'Option 4', 'number': 4, 'votes_add': 8, 'votes_subtract':2},
+                {'option': 'Option 5', 'number': 5, 'votes_add': 2, 'votes_subtract':0},
+
+            ]
+        }
+
+        expected_result = {}
+
+        response = self.client.post('/postproc/', data, format='json')
+        self.assertEqual(response.status_code, 400)
 
         values = response.json()
         self.assertEqual(values, expected_result)
