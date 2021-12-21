@@ -39,6 +39,26 @@ class PostProcView(APIView):
         out.sort(key=lambda x: -x['votes'])
         return out
 
+
+    def subtrac(self, options, seats):
+        out = []
+
+        for opt in options:
+
+            votes = opt['votes_add'] - opt['votes_subtract']
+            if votes < 0:
+                votes = 0
+
+            out.append({
+                **opt,
+                'votes':votes,
+                'postproc': 0,
+            })
+
+        return self.dhont(out, seats)
+
+    
+
     def post(self, request):
         """
          * type: IDENTITY | EQUALITY | WEIGHT | DHONT
