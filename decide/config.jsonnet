@@ -16,7 +16,7 @@ local db = {
     KEYBITS: 256,
     ALLOWED_VERSIONS: ["v1", "v2"],
     DEFAULT_VERSION: "v1",
-    BASEURL: "https://equipo1decide.herokuapp.com:5432",
+    BASEURL: "https://equipo1decide.herokuapp.com:8000",
 
     # Modules in use, commented modules that you won"t use
     MODULES: [
