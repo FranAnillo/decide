@@ -126,7 +126,7 @@ DATABASES = {
         'NAME': 'decidedb',
         'USER': 'decide',
         'PASSWORD': 'complexpassword',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
