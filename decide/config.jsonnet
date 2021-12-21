@@ -2,7 +2,7 @@
 # file, it's a data template language, to learn more go to:
 # https://jsonnet.org/
 
-local host = "localhost";
+local host = "http://localhost;
 local port = "8000";
 local db = {
     name: "decidedb",
@@ -16,7 +16,7 @@ local db = {
     KEYBITS: 256,
     ALLOWED_VERSIONS: ["v1", "v2"],
     DEFAULT_VERSION: "v1",
-    BASEURL: "http://" + host + ":" + port,
+    BASEURL: "https://equipo1decide.herokuapp.com",
 
     # Modules in use, commented modules that you won"t use
     MODULES: [
