@@ -13,7 +13,7 @@ MODULES = [
     'voting',
 ]
 
-BASEURL='http://localhost:8525'
+BASEURL='https://equipo1decide.herokuapp.com/'
 
 APIS = {
     'authentication': BASEURL,
@@ -32,7 +32,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'decidedb',
         'USER': 'decide',
-        'HOST': '127.0.0.1',
+        'HOST': 'localhost',
         'PASSWORD': 'complexpassword',
         'PORT': '5432',
     }
