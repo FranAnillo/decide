@@ -16,18 +16,18 @@ MODULES = [
 
 
 APIS = {
-    'authentication': 'https://equipo1decide.herokuapp.com/',
-    'base': 'https://equipo1decide.herokuapp.com/',
-    'booth': 'https://equipo1decide.herokuapp.com/',
-    'census': 'https://equipo1decide.herokuapp.com/',
-    'mixnet': 'https://equipo1decide.herokuapp.com/',
-    'postproc': 'https://equipo1decide.herokuapp.com/',
-    'store': 'https://equipo1decide.herokuapp.com/',
-    'visualizer': 'https://equipo1decide.herokuapp.com/',
-    'voting': 'https://equipo1decide.herokuapp.com/',
+    'authentication': 'http://localhost:8000',
+    'base': 'http://localhost:8000',
+    'booth': 'http://localhost:8000',
+    'census': 'http://localhost:8000',
+    'mixnet': 'http://localhost:8000',
+    'postproc': 'http://localhost:8000',
+    'store': 'http://localhost:8000',
+    'visualizer': 'http://localhost:8000',
+    'voting': 'http://localhost:8000',
 }
 
-BASEURL = 'https://equipo1decide.herokuapp.com/'
+BASEURL = 'http://localhost:8000'
 
 
 DATABASES = {
