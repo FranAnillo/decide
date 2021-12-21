@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import copy
+
 class PostProcView(APIView):
 
     def identity(self, options):
@@ -46,6 +47,31 @@ class PostProcView(APIView):
     def post(self, request):
         """
          * type: IDENTITY | MAYORIA_ABSOLUTA 
+    def dhont(self, options, seats):
+        out = []
+
+        for opt in options:
+            out.append({
+                **opt,
+                'postproc': 0,
+            });
+
+        escaños = 0
+        while escaños < seats:
+            cocientes = []
+            for i in range(len(out)):
+                cocientes.append(out[i]['votes'] / (out[i]['postproc'] + 1))
+
+            ganador = cocientes.index(max(cocientes))
+            out[ganador]['postproc'] = out[ganador]['postproc'] + 1
+            escaños += 1
+
+        out.sort(key=lambda x: -x['votes'])
+        return out
+
+    def post(self, request):
+        """
+         * type: IDENTITY | EQUALITY | WEIGHT | DHONT | MAYORIA_ABSOLUTA
          * options: [
             {
              option: str,
@@ -63,13 +89,20 @@ class PostProcView(APIView):
         s = request.data.get('seats')
         p = request.data.get('paridad')
 
-        if len(opts) == 0 and len(order_opts) == 0:
-            return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
         if t == 'IDENTITY':
             return self.identity(opts)
         elif t == 'MAYORIA_ABSOLUTA':
             return self.mayoria_absoluta(opts)
-       
+        elif t == 'DHONT':
+            if(s==None):
+                return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                if (p==True):
+                   results = self.dhont(opts, s)
+                   return Response(self.aplicarParidad(results))
+                else:    
+                    return Response(self.dhont(opts, s))
+
         return Response({})
 
