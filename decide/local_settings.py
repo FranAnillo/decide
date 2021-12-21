@@ -13,7 +13,7 @@ MODULES = [
     'voting',
 ]
 
-BASEURL='https://localhost:8000/'
+BASEURL='https://localhost/'
 APIS = {
     'authentication': BASEURL,
     'base': BASEURL,
@@ -31,7 +31,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'decidedb',
         'USER': 'decide',
-        'HOST': '127.0.0.1',
+        'HOST': 'localhost',
         'PASSWORD': 'complexpassword',
         'PORT': '5432',
     }
