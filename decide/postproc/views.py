@@ -17,6 +17,7 @@ class PostProcView(APIView):
         return Response(out)
 
 
+#Metodo de votacion de algoritmo relativo
 def relativa(self, options):
         out= []
         numvotos=0
