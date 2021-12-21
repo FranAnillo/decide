@@ -1,41 +1,41 @@
-ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = ["*"]
 
-# Modules in use, commented modules that you won't use
-MODULES = [
-    'authentication',
-    'base',
-    'booth',
-    'census',
-    'mixnet',
-    'postproc',
-    'store',
-    'visualizer',
-    'voting',
-]
+# # Modules in use, commented modules that you won't use
+# MODULES = [
+#     'authentication',
+#     'base',
+#     'booth',
+#     'census',
+#     'mixnet',
+#     'postproc',
+#     'store',
+#     'visualizer',
+#     'voting',
+# ]
 
-BASEURL='http://localhost:5432'
-APIS = {
-    'authentication': BASEURL,
-    'base': BASEURL,
-    'booth': BASEURL,
-    'census': BASEURL,
-    'mixnet': BASEURL,
-    'postproc': BASEURL,
-    'store': BASEURL,
-    'visualizer': BASEURL,
-    'voting': BASEURL,
-}
+# BASEURL='http://localhost:5432'
+# APIS = {
+#     'authentication': BASEURL,
+#     'base': BASEURL,
+#     'booth': BASEURL,
+#     'census': BASEURL,
+#     'mixnet': BASEURL,
+#     'postproc': BASEURL,
+#     'store': BASEURL,
+#     'visualizer': BASEURL,
+#     'voting': BASEURL,
+# }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'decidedb',
-        'USER': 'decide',
-        'HOST': 'localhost',
-        'PASSWORD': 'complexpassword',
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'decidedb',
+#         'USER': 'decide',
+#         'HOST': 'localhost',
+#         'PASSWORD': 'complexpassword',
+#         'PORT': '5432',
+#     }
+# }
 
-# number of bits for the key, all auths should use the same number of bits
-KEYBITS = 256
+# # number of bits for the key, all auths should use the same number of bits
+# KEYBITS = 256
