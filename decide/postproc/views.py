@@ -18,6 +18,7 @@ class PostProcView(APIView):
         return Response(out)
 
 
+
     def mayoria_absoluta(self, options):
         out= []
         numvotos=0
@@ -28,7 +29,6 @@ class PostProcView(APIView):
                 **opt,
                 'postproc':0,
             })
-
         if len(out)>=2:
             cocientes = []
             for i in range(len(out)):
@@ -116,6 +116,47 @@ class PostProcView(APIView):
 
         out.sort(key=lambda x: -x['votes'])
         return out
+      
+      
+    #Metodo de votacion de algoritmo relativo
+    def relativa(self, options):
+        out= []
+        numvotos=0
+
+        for opt in options:
+            numvotos=opt['votes']+numvotos
+            out.append({
+                **opt,
+                'postproc':0,
+            })
+
+        mayor=0.0
+        list=out.copy()
+        while len(list)>=2:
+
+            if len(list)>2:
+                cocientes = []
+                for i in range(len(list)):
+                   cocientes.append(list[i]['votes']/numvotos)       
+                perdedor=cocientes.index(min(cocientes))
+                ganador=cocientes.index(max(cocientes))
+                mayor=cocientes[ganador]
+                if mayor>0.5:
+                    g=list[ganador]['number']
+                    out[g-1]['postproc']= 1
+                    break
+                numvotos= numvotos - cocientes[perdedor]
+                del list[perdedor]
+            elif len(list)==2:
+                cocientes = []
+                for i in range(len(list)):
+                    cocientes.append(list[i]['votes']/numvotos)
+                ganador=cocientes.index(max(cocientes)) 
+                g=list[ganador]['number'] 
+                out[g-1]['postproc']= 1
+                break
+        out.sort(key=lambda x:-x['votes'])
+        return Response(out)
 
 
     def subtrac(self, options, seats):
@@ -135,10 +176,10 @@ class PostProcView(APIView):
 
         return self.dhont(out, seats)
 
-
-   def post(self, request):
+     
+    def post(self, request):
         """
-         * type: IDENTITY | DHONT | RELATIVA | MAYORIA_ABSOLUTA | RECUENTO_BORDA | SUBTRAC
+         * type: IDENTITY | EQUALITY | WEIGHT | RELATIVA | DHONT | MAYORIA_ABSOLUTA | RECUENTO BORDA | SUBTRAC
          * options: [
             {
              option: str,
@@ -149,17 +190,16 @@ class PostProcView(APIView):
            ]
 	    * seats: int
         """
-
         t = request.data.get('type')
         opts = request.data.get('options', [])
         order_opts = request.data.get('order_options', [])
         s = request.data.get('seats')
         p = request.data.get('paridad')
 
+        
         if len(opts) == 0 and len(order_opts) == 0:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
-
-        if t == 'IDENTITY':
+        elif t == 'IDENTITY':
             return self.identity(opts)
         elif t == 'RELATIVA':
             return self.relativa(opts)
