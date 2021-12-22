@@ -194,6 +194,7 @@ class PostProcView(APIView):
 
         out.sort(key=lambda x: -x['votes'])
         return out
+
      
     def post(self, request):
         """
@@ -240,7 +241,7 @@ class PostProcView(APIView):
                 if (p==True):
                    results = self.dhont(opts, s)
                    return Response(self.aplicarParidad(results))
-                else:    
+                else:
                     return Response(self.dhont(opts, s))
 
         elif t == 'RECUENTO_BORDA':
