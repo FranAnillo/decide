@@ -176,10 +176,28 @@ class PostProcView(APIView):
 
         return self.dhont(out, seats)
 
+    def hamilton(self, options, seats):
+        out = []
+        numvotos=0
+
+        for opt in options:
+            numvotos=opt['votes']+numvotos
+            out.append({
+                **opt,
+                'postproc': 0,
+            })
+
+        
+        for i in range(len(out)):
+            cuota=((out[i]['votes']/numvotos)*seats)
+            out[i]['postproc'] = out[i]['postproc'] + round(cuota)
+
+        out.sort(key=lambda x: -x['votes'])
+        return out
      
     def post(self, request):
         """
-         * type: IDENTITY | EQUALITY | WEIGHT | RELATIVA | DHONT | MAYORIA_ABSOLUTA | RECUENTO BORDA | SUBTRAC
+         * type: IDENTITY | EQUALITY | WEIGHT | RELATIVA | DHONT | MAYORIA_ABSOLUTA | RECUENTO BORDA | SUBTRAC | HAMILTON
          * options: [
             {
              option: str,
@@ -223,7 +241,18 @@ class PostProcView(APIView):
                    results = self.dhont(opts, s)
                    return Response(self.aplicarParidad(results))
                 else:    
-                    return Response(self.dhont(opts, s))            
+                    return Response(self.dhont(opts, s))
+
+        elif t == 'RECUENTO_BORDA':
+            if len(order_opts) == 0:
+                return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return self.recuento_borda(order_opts)
+        elif t == 'HAMILTON':
+            if(s==None):
+                return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(self.hamilton(opts, s))           
         else:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
         return Response({})
