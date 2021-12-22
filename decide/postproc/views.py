@@ -176,7 +176,6 @@ class PostProcView(APIView):
 
         return self.dhont(out, seats)
 
-
     def hamilton(self, options, seats):
         out = []
         numvotos=0
@@ -196,10 +195,10 @@ class PostProcView(APIView):
         out.sort(key=lambda x: -x['votes'])
         return out
 
- def post(self, request):
+     
+    def post(self, request):
         """
-         * type: IDENTITY | EQUALITY | WEIGHT | RELATIVA | DHONT | MAYORIA_ABSOLUTA | RECUENTO BORDA | SUBTRAC
-
+         * type: IDENTITY | EQUALITY | WEIGHT | RELATIVA | DHONT | MAYORIA_ABSOLUTA | RECUENTO BORDA | SUBTRAC | HAMILTON
          * options: [
             {
              option: str,
@@ -244,6 +243,7 @@ class PostProcView(APIView):
                    return Response(self.aplicarParidad(results))
                 else:
                     return Response(self.dhont(opts, s))
+
         elif t == 'RECUENTO_BORDA':
             if len(order_opts) == 0:
                 return Response({}, status=status.HTTP_400_BAD_REQUEST)
