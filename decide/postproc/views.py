@@ -234,6 +234,7 @@ class PostProcView(APIView):
         opts = request.data.get('options', [])
         order_opts = request.data.get('order_options', [])
         s = request.data.get('seats')
+        p = request.data.get('paridad')
 
         
         if len(opts) == 0 and len(order_opts) == 0:
@@ -243,12 +244,12 @@ class PostProcView(APIView):
         elif t == 'RELATIVA':
             return self.relativa(opts)
         elif t == 'MAYORIA_ABSOLUTA':
-            return self.mayoria_absoluta(opts)
+            return self.absoluta(opts)
         elif t == 'RECUENTO_BORDA':
             if len(order_opts) == 0:
                 return Response({}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return self.recuento_borda(order_opts)
+                return self.borda(order_opts)
         elif t == 'SUBTRAC':
             if (s == None):
                 return Response({}, status=status.HTTP_400_BAD_REQUEST)
@@ -258,8 +259,17 @@ class PostProcView(APIView):
             if(s==None):
                 return Response({}, status=status.HTTP_400_BAD_REQUEST)
             else:
-               results = self.dhont(opts, s)
-               return Response(results)
+                if (p==True):
+                   results = self.dhont(opts, s)
+                   return Response(self.aplicarParidad(results))
+                else:
+                    return Response(self.dhont(opts, s))
+
+        elif t == 'RECUENTO_BORDA':
+            if len(order_opts) == 0:
+                return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return self.recuento_borda(order_opts)
         elif t == 'HAMILTON':
             if(s==None):
                 return Response({}, status=status.HTTP_400_BAD_REQUEST)
