@@ -158,10 +158,28 @@ class PostProcView(APIView):
         out.sort(key=lambda x:-x['votes'])
         return Response(out)
 
+
+    def subtrac(self, options, seats):
+        out = []
+
+        for opt in options:
+
+            votes = opt['votes_add'] - opt['votes_subtract']
+            if votes < 0:
+                votes = 0
+
+            out.append({
+                **opt,
+                'votes':votes,
+                'postproc': 0,
+            })
+
+        return self.dhont(out, seats)
+
      
     def post(self, request):
         """
-         * type: IDENTITY | EQUALITY | WEIGHT | RELATIVA | DHONT | MAYORIA_ABSOLUTA | RECUENTO BORDA
+         * type: IDENTITY | EQUALITY | WEIGHT | RELATIVA | DHONT | MAYORIA_ABSOLUTA | RECUENTO BORDA | SUBTRAC
          * options: [
             {
              option: str,
@@ -178,12 +196,25 @@ class PostProcView(APIView):
         s = request.data.get('seats')
         p = request.data.get('paridad')
 
-        if t == 'IDENTITY':
+        
+        if len(opts) == 0 and len(order_opts) == 0:
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
+        elif t == 'IDENTITY':
             return self.identity(opts)
         elif t == 'RELATIVA':
             return self.relativa(opts)
         elif t == 'MAYORIA_ABSOLUTA':
-            return self.mayoria_absoluta(opts)
+            return self.absoluta(opts)
+        elif t == 'RECUENTO_BORDA':
+            if len(order_opts) == 0:
+                return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return self.borda(order_opts)
+        elif t == 'SUBTRAC':
+            if (s == None):
+                return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(self.subtrac(opts, s))
         elif t == 'DHONT':
             if(s==None):
                 return Response({}, status=status.HTTP_400_BAD_REQUEST)
@@ -192,13 +223,7 @@ class PostProcView(APIView):
                    results = self.dhont(opts, s)
                    return Response(self.aplicarParidad(results))
                 else:    
-                    return Response(self.dhont(opts, s))
-
-        elif t == 'RECUENTO_BORDA':
-            if len(order_opts) == 0:
-                return Response({}, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return self.recuento_borda(order_opts)
-           
+                    return Response(self.dhont(opts, s))            
+        else:
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
         return Response({})
-
