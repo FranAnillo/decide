@@ -33,6 +33,11 @@ class Voting(models.Model):
     desc = models.TextField(blank=True, null=True)
     question = models.ForeignKey(Question, related_name='voting', on_delete=models.CASCADE)
 
+    VOTING_TYPE_OPTIONS = [
+        ('IDENTITY', 'IDENTITY'),]
+
+    voting_type= models.CharField(max_length=10,choices=VOTING_TYPE_OPTIONS,default='IDENTITY')
+
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
 
@@ -100,6 +105,7 @@ class Voting(models.Model):
     def do_postproc(self):
         tally = self.tally
         options = self.question.options.all()
+        votingType = self.VOTING_TYPE_OPTIONS
 
         opts = []
         for opt in options:
@@ -113,7 +119,7 @@ class Voting(models.Model):
                 'votes': votes
             })
 
-        data = { 'type': 'IDENTITY', 'options': opts }
+        data = { 'type': votingType, 'options': opts }
         postp = mods.post('postproc', json=data)
 
         self.postproc = postp
