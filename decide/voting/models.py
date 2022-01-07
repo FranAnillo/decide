@@ -35,7 +35,8 @@ class Voting(models.Model):
 
     VOTING_TYPE_OPTIONS = [
         ('IDENTITY', 'IDENTITY'),
-        ('DHONT', 'DHONT'),]
+        ('DHONT', 'DHONT'),
+        ('SUBTRAC', 'SUBTRAC')]
 
     voting_type= models.CharField(max_length=10,choices=VOTING_TYPE_OPTIONS,default='IDENTITY')
 
