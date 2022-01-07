@@ -34,7 +34,8 @@ class Voting(models.Model):
     question = models.ForeignKey(Question, related_name='voting', on_delete=models.CASCADE)
 
     VOTING_TYPE_OPTIONS = [
-        ('IDENTITY', 'IDENTITY'),]
+        ('IDENTITY', 'IDENTITY'),
+        ('DHONT', 'DHONT'),]
 
     voting_type= models.CharField(max_length=10,choices=VOTING_TYPE_OPTIONS,default='IDENTITY')
 
