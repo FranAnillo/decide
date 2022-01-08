@@ -70,6 +70,7 @@ MODULES = [
     'store',
     'visualizer',
     'voting',
+    'index',
 ]
 
 BASEURL = 'https://equipo1decide.herokuapp.com'
