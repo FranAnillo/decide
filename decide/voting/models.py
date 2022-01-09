@@ -37,6 +37,7 @@ class Voting(models.Model):
         ('IDENTITY', 'IDENTITY'),
         ('WEBSTER', 'WEBSTER'),
         ('DHONT', 'DHONT'),
+        ('HAMILTON', 'HAMILTON'),
         ('RELATIVA', 'RELATIVA'),
         ('SUBTRAC', 'SUBTRAC')]
 
@@ -109,7 +110,7 @@ class Voting(models.Model):
     def do_postproc(self):
         tally = self.tally
         options = self.question.options.all()
-        votingType = self.VOTING_TYPE_OPTIONS
+        votingType = self.voting_type
 
         opts = []
         for opt in options:
@@ -122,7 +123,7 @@ class Voting(models.Model):
                 'number': opt.number,
                 'votes': votes
             })
-
+        print(votingType)
         data = { 'type': votingType, 'options': opts }
         postp = mods.post('postproc', json=data)
 
