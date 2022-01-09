@@ -38,8 +38,9 @@ class Voting(models.Model):
         ('WEBSTER', 'WEBSTER'),
         ('DHONT', 'DHONT'),
         ('RECUENTO_BORDA', 'RECUENTO_BORDA'),
-        ('HAMILTON', 'HAMILTON'),
         ('RELATIVA', 'RELATIVA'),
+        ('MAYORIA_ABSOLUTA', 'MAYORIA_ABSOLUTA'),
+        ('HAMILTON', 'HAMILTON'),
         ('SUBTRAC', 'SUBTRAC')]
 
     voting_type= models.CharField(max_length=10,choices=VOTING_TYPE_OPTIONS,default='IDENTITY')
