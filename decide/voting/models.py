@@ -37,6 +37,7 @@ class Voting(models.Model):
         ('IDENTITY', 'IDENTITY'),
         ('WEBSTER', 'WEBSTER'),
         ('DHONT', 'DHONT'),
+        ('RECUENTO_BORDA', 'RECUENTO_BORDA'),
         ('HAMILTON', 'HAMILTON'),
         ('RELATIVA', 'RELATIVA'),
         ('SUBTRAC', 'SUBTRAC')]
