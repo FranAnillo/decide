@@ -9,7 +9,7 @@ services:
       - db:/var/lib/postgresql/data
     networks:
       - decide
-    enviroment:
+    environment:
       - POSTGRES_PASSWORD=postgres
   web:
     restart: always
