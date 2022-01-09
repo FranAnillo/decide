@@ -32,6 +32,7 @@ class Voting(models.Model):
     name = models.CharField(max_length=200)
     desc = models.TextField(blank=True, null=True)
     question = models.ForeignKey(Question, related_name='voting', on_delete=models.CASCADE)
+    seats = models.PositiveIntegerField(default=1)
 
     VOTING_TYPE_OPTIONS = [
         ('IDENTITY', 'IDENTITY'),
@@ -43,7 +44,7 @@ class Voting(models.Model):
         ('HAMILTON', 'HAMILTON'),
         ('SUBTRAC', 'SUBTRAC')]
 
-    voting_type= models.CharField(max_length=10,choices=VOTING_TYPE_OPTIONS,default='IDENTITY')
+    voting_type= models.CharField(max_length=50,choices=VOTING_TYPE_OPTIONS,default='IDENTITY')
 
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
@@ -113,6 +114,7 @@ class Voting(models.Model):
         tally = self.tally
         options = self.question.options.all()
         votingType = self.voting_type
+        seats = self.seats
 
         opts = []
         for opt in options:
@@ -125,8 +127,7 @@ class Voting(models.Model):
                 'number': opt.number,
                 'votes': votes
             })
-        print(votingType)
-        data = { 'type': votingType, 'options': opts }
+        data = { 'type': votingType, 'options': opts, 'seats': seats }
         postp = mods.post('postproc', json=data)
 
         self.postproc = postp
