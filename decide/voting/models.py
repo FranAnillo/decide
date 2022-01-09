@@ -35,6 +35,7 @@ class Voting(models.Model):
 
     VOTING_TYPE_OPTIONS = [
         ('IDENTITY', 'IDENTITY'),
+        ('WEBSTER', 'WEBSTER'),
         ('DHONT', 'DHONT'),
         ('HAMILTON', 'HAMILTON'),
         ('RELATIVA', 'RELATIVA'),
