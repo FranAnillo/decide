@@ -11,8 +11,8 @@ jobs:
         image: postgres:10.8
         env:
           POSTGRES_USER: decide
-          POSTGRES_PASSWORD: decide
-          POSTGRES_DB: decide
+          POSTGRES_PASSWORD: complexpassword
+          POSTGRES_DB: decidedb
         ports:
           - 5432:5432
         # needed because the postgres container does not provide a healthcheck
@@ -31,10 +31,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install codacy-coverage
+        pip install selenium
     - name: Run migrations
       run: cd decide;python manage.py migrate
     - name: Run tests     
-      run: cd decide;coverage run --branch --source=. ./manage.py test census --keepdb; coverage xml;
+      run: cd decide;coverage run --branch --source=. ./manage.py test --keepdb; coverage xml;
     - name: Codacy Coverage Reporter
       uses: codacy/codacy-coverage-reporter-action@v1.1.0
       with:
@@ -42,10 +43,11 @@ jobs:
           coverage-reports: decide/coverage.xml
   deploy:
     runs-on: ubuntu-latest
+    if: ${{github.ref == 'refs/heads/Equipo-1' }}
     steps:
     - uses: actions/checkout@v1
     - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
       with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "equipo1decide"
-          heroku_email: "dani.dorante2000@gmail.com"
+         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+         heroku_app_name: "equipo1decide"
+         heroku_email: "dani.dorante2000@gmail.com"
