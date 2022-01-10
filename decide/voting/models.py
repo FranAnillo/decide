@@ -212,8 +212,8 @@ class Voting(models.Model):
         votes = mods.get('store', params={'voting_id': self.id}, HTTP_AUTHORIZATION='Token ' + token)
         # anon votes
         return [[i['a'], i['b']] for i in votes]
-
-    def tally_votes(self, token=''):
+    
+     def tally_votes(self, token=''):
         '''
         The tally is a shuffle and then a decrypt
         '''
@@ -244,14 +244,12 @@ class Voting(models.Model):
 
         self.tally = response.json()
         self.save()
-py
+
         self.do_postproc()
 
     def do_postproc(self):
         tally = self.tally
         options = self.question.options.all()
-        votingType = self.voting_type
-        seats = self.seats
 
         opts = []
         for opt in options:
@@ -264,7 +262,8 @@ py
                 'number': opt.number,
                 'votes': votes
             })
-        data = { 'type': votingType, 'options': opts, 'seats': seats }
+
+        data = { 'type': 'IDENTITY', 'options': opts }
         postp = mods.post('postproc', json=data)
 
         self.postproc = postp
