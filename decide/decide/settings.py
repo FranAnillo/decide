@@ -73,6 +73,7 @@ MODULES = [
     'index',
 ]
 
+
 BASEURL = 'https://equipo1decide.herokuapp.com'
 
 APIS = {
@@ -128,7 +129,7 @@ DATABASES = {
         'USER': 'decide',
         'PASSWORD': 'complexpassword',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '5435',
     }
 }
 
@@ -201,3 +202,4 @@ NOSE_ARGS =[
 ]
 
 django_heroku.settings(locals(), test_runner=False)
+
