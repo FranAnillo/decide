@@ -1,11 +1,51 @@
 from django.contrib import admin
 from django.utils import timezone
 
-from .models import QuestionOption
-from .models import Question
-from .models import Voting
+from .models import *
 
 from .filters import StartedFilter
+
+#Votaciones Binarias
+class RespuestaBinariaInline(admin.TabularInline):
+    model = RespuestaBinaria
+    extra = 1
+
+#Creadión de la visualización de votaciones binarias para un admin
+class VotacionBinariaAdmin(admin.ModelAdmin):
+    list_display=('id','titulo','descripcion','Numero_Trues','Numero_Falses')
+    inlines =[RespuestaBinariaInline] 
+
+#Creadión de la respuesta de votaciones binarias para un admin
+class RepuestaBinariaAdmin(admin.ModelAdmin):
+    list_display = ('id','respuesta','Nombre_Votacion')
+
+#Votaciones preferencias
+class PreguntaPreferenciaInline(admin.TabularInline):
+    model = PreguntaPreferencia
+    extra = 1
+
+class VotacionPreferenciaAdmin(admin.ModelAdmin):
+    list_display=('id','titulo','descripcion','Numero_De_Preguntas_Preferencia')
+    inlines =[PreguntaPreferenciaInline]
+
+class OpcionRespuestaInline(admin.TabularInline):
+    model = OpcionRespuesta
+    extra = 1
+
+class PreguntaPreferenciaAdmin(admin.ModelAdmin):
+    list_display = ('id','textoPregunta','Nombre_Votacion_Preferencia','Numero_De_Opciones')
+    inlines =[OpcionRespuestaInline]
+
+class RespuestaPreferenciaInline(admin.TabularInline):
+    model = RespuestaPreferencia
+    extra = 1
+
+class OpcionRespuestaAdmin(admin.ModelAdmin):
+    list_display = ('id','nombre_opcion','Nombre_Pregunta_Preferencia','Media_Preferencia','Respuestas_Opcion')
+    inlines =[RespuestaPreferenciaInline]
+
+class RespuestaPreferenciaAdmin(admin.ModelAdmin):
+    list_display = ('id','orden_preferencia','Nombre_Opcion_Respuesta')
 
 
 def start(modeladmin, request, queryset):
@@ -48,3 +88,11 @@ class VotingAdmin(admin.ModelAdmin):
 
 admin.site.register(Voting, VotingAdmin)
 admin.site.register(Question, QuestionAdmin)
+
+admin.site.register(VotacionBinaria,VotacionBinariaAdmin)
+admin.site.register(RespuestaBinaria,RepuestaBinariaAdmin)
+
+admin.site.register(VotacionPreferencia,VotacionPreferenciaAdmin)
+admin.site.register(PreguntaPreferencia, PreguntaPreferenciaAdmin)
+admin.site.register(OpcionRespuesta,OpcionRespuestaAdmin)
+admin.site.register(RespuestaPreferencia,RespuestaPreferenciaAdmin)

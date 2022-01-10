@@ -12,10 +12,215 @@ from base.tests import BaseTestCase
 from census.models import Census
 from mixnet.mixcrypt import ElGamal
 from mixnet.mixcrypt import MixCrypt
+
 from mixnet.models import Auth
-from voting.models import Voting, Question, QuestionOption
+from voting.models import *
+
+#Test de guardado de una votación binaria y comprobar que lo ha hecho correctamente
+class GuardaVotacionBinariaTest(BaseTestCase):
+    def setUp(self):
+        vb = VotacionBinaria(titulo="Titulo 1",descripcion="Descripcion")
+        vb.save()
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vb=None
+    def testExist(self):
+        vb = VotacionBinaria.objects.get(titulo="Titulo 1")
+        self.assertEquals(vb.titulo,"Titulo 1")
+        self.assertEquals(vb.descripcion,"Descripcion")
+
+#Crea una votación nueva, posteriormente la actualiza y comprueba que la actualización ha sido realizada con éxito
+class ActualizaVotacionBinariaTest(BaseTestCase):
+    def setUp(self):
+        vb = VotacionBinaria(titulo="Titulo 1",descripcion="Descripcion")
+        vb.save()
+        vb.titulo = "Titulo 2"
+        vb.descripcion = "Description"
+        vb.save()
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vb=None
+    def testActualizado(self):
+        vb = VotacionBinaria.objects.get(titulo="Titulo 2")
+        self.assertEquals(vb.titulo,"Titulo 2")
+        self.assertEquals(vb.descripcion,"Description")
+
+#Crea una votación binaria, después crea una segunda, posteriormente la elimina y comprueba que se ha eliminado correctamente la segunda votación
+class BorraVotacionBinariaTest(BaseTestCase):
+    def setUp(self):
+        vb1 = VotacionBinaria(titulo="Titulo 1",descripcion="Descripcion 1")
+        vb1.save()
+        vb2 = VotacionBinaria(titulo="Titulo 2",descripcion="Descripcion 2")
+        vb2.save()
+        vb2.delete()
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vb1=None
+        self.vb2=None
+    def testBorrado(self):
+        totalVotaciones = len(VotacionBinaria.objects.all())
+        self.assertEquals(totalVotaciones,1)
+
+#Creación de una respuesta binaria a partir de una votación binaria
+class AddRespuestaBinaria(BaseTestCase):
+    def setUp(self):
+        vb1 = VotacionBinaria(titulo="Titulo 1",descripcion="Descripcion 1")
+        vb1.save()
+        rb1  = RespuestaBinaria(respuesta = 1)
+        vb1.addRespuestaBinaria(rb1)
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vb1=None
+        self.rb1=None
+    def testAdd(self):
+        vb = VotacionBinaria.objects.get(titulo="Titulo 1")
+        rb = RespuestaBinaria.objects.get(votacionBinaria_id=vb.id)
+        self.assertEquals(rb.respuesta,1)
+        self.assertEquals(rb.votacionBinaria_id,vb.id)
+
+#Creación de una votación binaria con 4 respuestas para el conteo de true y false
+class CuentaTruesYFalsesTest(BaseTestCase):
+    def setUp(self):
+        vb1 = VotacionBinaria(titulo="Titulo 1",descripcion="Descripcion 1")
+        vb1.save()
+
+        rb1 = RespuestaBinaria(respuesta=1)
+        rb2 = RespuestaBinaria(respuesta=1)
+        rb3 = RespuestaBinaria(respuesta=1)
+        rb4 = RespuestaBinaria(respuesta=0)
+
+        vb1.addRespuestaBinaria(rb1)
+        vb1.addRespuestaBinaria(rb2)
+        vb1.addRespuestaBinaria(rb3)
+        vb1.addRespuestaBinaria(rb4)
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vb1=None
+        self.rb1=None
+        self.rb2=None
+        self.rb3=None
+        self.rb4=None
+    def testContador(self):
+        vb = VotacionBinaria.objects.get(titulo="Titulo 1")
+        self.assertEquals(vb.Numero_Trues(),3)
+        self.assertEquals(vb.Numero_Falses(),1)
 
 
+#Test votaciones preferencia
+class GuardaVotacionPreferenciaTest(BaseTestCase):
+    def setUp(self):
+        vp = VotacionPreferencia(titulo="preferencia 1",descripcion="descripcion 1")
+        vp.save()
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vp=None
+    def testExist(self):
+        vp = VotacionPreferencia.objects.get(titulo="preferencia 1")
+        self.assertEquals(vp.titulo,"preferencia 1")
+        self.assertEquals(vp.descripcion,"descripcion 1")
+
+
+class ActualizaVotacionPreferenciaTest(BaseTestCase):
+    def setUp(self):
+        vp = VotacionPreferencia(titulo="preferencia 1",descripcion="descripcion 1")
+        vp.save()
+        vp.titulo = "preferencia 2"
+        vp.descripcion = "descripcion 2"
+        vp.save()
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vp=None
+    def testActualizado(self):
+        vp = VotacionPreferencia.objects.get(titulo="preferencia 2")
+        self.assertEquals(vp.titulo,"preferencia 2")
+        self.assertEquals(vp.descripcion,"descripcion 2")
+
+
+class BorraVotacionPreferenciaTest(BaseTestCase):
+    def setUp(self):
+        vp1 = VotacionPreferencia(titulo="preferencia 1",descripcion="descripcion 1")
+        vp1.save()
+        vp2 = VotacionPreferencia(titulo="preferencia 2",descripcion="descripcion 2")
+        vp2.save()
+        vp2.delete()
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vp1=None
+        self.vp2=None
+    def testBorrado(self):
+        totalVotaciones = len(VotacionPreferencia.objects.all())
+        self.assertEquals(totalVotaciones,1)
+
+
+class AddPreguntaPreferenciaTest(BaseTestCase):
+    def setUp(self):
+        vp = VotacionPreferencia(titulo="preferencia 1",descripcion="descripcion 1")
+        vp.save()
+        pp = PreguntaPreferencia(textoPregunta ="Texto 1")
+        vp.addPreguntaPreferencia(pp)
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vp=None
+        self.pp=None
+    def testAdd(self):
+        vp = VotacionPreferencia.objects.get(titulo="preferencia 1")
+        pp = PreguntaPreferencia.objects.get(votacionPreferencia_id=vp.id)
+        self.assertEquals(pp.textoPregunta,"Texto 1")
+        self.assertEquals(pp.votacionPreferencia_id,vp.id)
+
+class CuentaPreguntaPreferencia(BaseTestCase):
+    def setUp(self):
+        vp = VotacionPreferencia(titulo="preferencia 1",descripcion="descripcion 1")
+        vp.save()
+        pp1 = PreguntaPreferencia(textoPregunta ="Texto 1")
+        vp.addPreguntaPreferencia(pp1)
+        pp2 = PreguntaPreferencia(textoPregunta ="Texto 2")
+        vp.addPreguntaPreferencia(pp2)
+        pp3 = PreguntaPreferencia(textoPregunta ="Texto 3")
+        vp.addPreguntaPreferencia(pp3)
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vp=None
+        self.pp1=None
+        self.pp2=None
+        self.pp3=None
+    def testAdd(self):
+        vp = VotacionPreferencia.objects.get(titulo="preferencia 1")
+        self.assertEquals(vp.Numero_De_Preguntas_Preferencia(),3)
+
+class AddOpcionRespuestaTest(BaseTestCase):
+    def setUp(self):
+        vp = VotacionPreferencia(titulo="preferencia 1",descripcion="descripcion 1")
+        vp.save()
+        pp = PreguntaPreferencia(textoPregunta ="Texto 1")
+        vp.addPreguntaPreferencia(pp)
+        opr = OpcionRespuesta(nombre_opcion = "Opcion 1")
+        pp.addOpcionRespuesta(opr)
+        super().setUp()
+    def tearDown(self):
+        super().tearDown()
+        self.vp=None
+        self.pp=None
+        self.opr=None
+    def testAdd(self):
+        vp = VotacionPreferencia.objects.get(titulo="preferencia 1")
+        pp = PreguntaPreferencia.objects.get(votacionPreferencia_id=vp.id)
+        opr = OpcionRespuesta.objects.get(preguntaPreferencia_id=pp.id)
+        self.assertEquals(opr.nombre_opcion,"Opcion 1")
+        self.assertEquals(opr.preguntaPreferencia_id,pp.id)
+
+
+#Test votacion
 class VotingTestCase(BaseTestCase):
 
     def setUp(self):
