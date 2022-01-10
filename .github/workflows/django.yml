@@ -48,4 +48,4 @@ jobs:
       with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "equipo1decide"
-          heroku_email: "equipo1decide"
+          heroku_email: "dani.dorante2000@gmail.com"
