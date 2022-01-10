@@ -32,5 +32,13 @@ class visualizerTestCase(StaticLiveServerTestCase):
 	    self.driver.get("https://equipo1decide.herokuapp.com/visualizer/1/")
 	    self.driver.set_window_size(1298, 863)
 	    elements = self.driver.find_elements(By.CSS_SELECTOR, "g > rect")
-	    assert len(elements) > 0		
+	    assert len(elements) > 0	
+		
+	
+	def test_pruebaQR(self):
+            self.driver.get("https://equipo1decide.herokuapp.com/visualizer/1/")
+            self.driver.set_window_size(1298, 863)
+            elements = self.driver.find_elements(By.ID, "qr-code")
+            assert len(elements) > 0
+
       
