@@ -171,6 +171,18 @@ class Voting(models.Model):
     question = models.ForeignKey(Question, related_name='voting', on_delete=models.CASCADE)
     seats = models.PositiveIntegerField(default=1)
 
+    VOTING_TYPE_OPTIONS = [
+        ('IDENTITY', 'IDENTITY'),
+        ('WEBSTER', 'WEBSTER'),
+        ('DHONT', 'DHONT'),
+        ('RECUENTO_BORDA', 'RECUENTO_BORDA'),
+        ('RELATIVA', 'RELATIVA'),
+        ('MAYORIA_ABSOLUTA', 'MAYORIA_ABSOLUTA'),
+        ('HAMILTON', 'HAMILTON'),
+        ('SUBTRAC', 'SUBTRAC')]
+
+    voting_type= models.CharField(max_length=50,choices=VOTING_TYPE_OPTIONS,default='IDENTITY')
+    
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
 
