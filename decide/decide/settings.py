@@ -129,7 +129,7 @@ DATABASES = {
         'USER': 'decide',
         'PASSWORD': 'complexpassword',
         'HOST': 'localhost',
-        'PORT': '5435',
+        'PORT': '5432',
     }
 }
 
