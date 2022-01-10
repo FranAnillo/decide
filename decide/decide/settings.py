@@ -74,7 +74,7 @@ MODULES = [
 ]
 
 
-BASEURL = 'https://equipo1decide.herokuapp.com'
+BASEURL = 'https://decide-maroma.herokuapp.com'
 
 APIS = {
     'authentication': BASEURL,
