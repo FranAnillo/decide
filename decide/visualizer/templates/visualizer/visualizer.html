@@ -7,15 +7,66 @@
     <link type="text/css" rel="stylesheet"
          href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
     <link type="text/css" rel="stylesheet" href="{% static "booth/style.css" %}" />
+
+     <!--Load the AJAX API-->
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+     <script type="text/javascript">
+ 
+       // Load the Visualization API and the corechart package.
+       google.charts.load('current', {'packages':['corechart']});
+ 
+       // Set a callback to run when the Google Visualization API is loaded.
+       google.charts.setOnLoadCallback(drawChart);
+ 
+       // Callback that creates and populates a data table,
+       // instantiates the pie chart, passes in the data and
+       // draws it.
+       function drawChart() {
+ 
+         // Create the data table.
+          var data = new google.visualization.DataTable();
+         data.addColumn('string', 'Topping');
+         data.addColumn('number', 'Slices');
+    
+ 
+  myObj2 = JSON.parse(JSON.stringify(voting.postproc));
+  for (var opt in myObj2) {
+   data.addRows([[myObj2[opt].option,myObj2[opt].postproc]]);
+ } 
+ 
+  
+         // Set chart options
+      
+         var options = {'title':voting.question.desc,
+                        'width':500,
+                        'height':600};
+ 
+         // Instantiate and draw our chart, passing in some options.
+         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+         chart.draw(data, options);
+       }
+     </script>
 {% endblock %}
 
 {% block content %}
+
+<style type="text/css">
+
+    .compartirRedes {
+        text-align: center;
+    }
+    .compartirQr {
+        text-align: center;
+    }
+    
+</style>
+
     <div id="app-visualizer">
         <!-- Navbar -->
         <b-navbar type="dark" variant="secondary">
             <b-navbar-brand tag="h1">Decide</b-navbar-brand>
         </b-navbar>
-
+        
         <div class="voting container">
             <h1>[[ voting.id ]] - [[ voting.name ]]</h1>
 
@@ -42,6 +93,26 @@
                 </table>
             </div>
 
+            <div class="row">
+                <p v-if="voting.end_date" style="text-align:center; text-">Puedes compartir los resultados de está votación en las siguintes redes sociales:</p>
+                <p class="compartirRedes">
+                    <a href="javascript:var dir=window.document.URL;var tit=window.document.title;var tit2=encodeURIComponent(tit);window.location.href=('http://twitter.com/?status='+'%20'+dir+'');"><img src="https://www.mundocuentas.com/wp-content/uploads/2020/11/twitter-logo-mundocuentas.png" border="0" width="120" height="80" alt="Compartir" /></a>
+                    <a href="javascript:var dir=window.document.URL;var tit=window.document.title;var tit2=encodeURIComponent(tit);var dir2= encodeURIComponent(dir);window.location.href=('http://www.facebook.com/share.php?u='+dir2);">
+                    <img src="data:image/jpeg;base64,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" border="0" width="75" height="75" alt="Compartir" /></a>
+                    &nbsp;&nbsp;&nbsp;
+                </p>
+                <p v-if="voting.end_date" style="text-align:center; text-">También puedes escanear el código qr para compartir los resultados:</p>
+                <p class="compartirQr">
+                <canvas v-if="voting.end_date" id="qr-code" ></canvas>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
+                <p v-if="voting.end_date" style="text-align:center; text-">A continuación, mostramos una gráfica con los resultados</p>
+                <div v-if="voting.end_date" id="chart_div" style="padding-left: 22%;"></div>
+
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -51,7 +122,8 @@
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
     <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    
     <script>
         var voting = {{voting|safe}};
         var app = new Vue({
@@ -62,5 +134,16 @@
             }
         })
     </script>
+
+<script>
+    var qr;
+    (function() {
+            qr = new QRious({
+            element: document.getElementById('qr-code'),
+            size: 200,
+            value: window.location.href
+        });
+    })();
+</script>
 </body>
 {% endblock %}

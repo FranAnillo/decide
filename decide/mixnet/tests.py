@@ -30,7 +30,7 @@ class MixnetCase(APITestCase):
         data = {
             "voting": 1,
             "auths": [
-                { "name": "auth1", "url": "http://localhost:8000" }
+                { "name": "auth1", "url": "https://decide-maroma.herokuapp.com"}
             ]
         }
 
@@ -118,14 +118,14 @@ class MixnetCase(APITestCase):
         with the second voting/auth.
         '''
 
-        data = { "voting": 1, "auths": [ { "name": "auth1", "url": "http://localhost:8000" } ] }
+        data = { "voting": 1, "auths": [ { "name": "auth1", "url": "https://decide-maroma.herokuapp.com" } ] }
         response = self.client.post('/mixnet/', data, format='json')
         key = response.json()
         pk1 = key["p"], key["g"], key["y"]
 
         data = {
             "voting": 2,
-            "auths": [ { "name": "auth2", "url": "http://localhost:8000" }],
+            "auths": [ { "name": "auth2", "url": "https://decide-maroma.herokuapp.com" }],
             "key": {"p": pk1[0], "g": pk1[1]}
         }
         response = self.client.post('/mixnet/', data, format='json')
@@ -166,8 +166,8 @@ class MixnetCase(APITestCase):
         data = {
             "voting": 1,
             "auths": [
-                { "name": "auth1", "url": "http://localhost:8000" },
-                { "name": "auth2", "url": "http://127.0.0.1:8000" },
+                { "name": "auth1", "url": "https://decide-maroma.herokuapp.com" },
+                { "name": "auth2", "url": "https://decide-maroma.herokuapp.com" },
             ]
         }
         response = self.client.post('/mixnet/', data, format='json')
